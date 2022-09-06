@@ -3,6 +3,7 @@ const axios = require('axios');
 const marvinApiBaseUrl = 'https://serv.amazingmarvin.com/api/';
 
 let todayTasks = [];
+let todayRefreshedAt = new Date();
 
 axios.defaults.headers.common['X-API-Token'] = process.env.MARVIN_TOKEN;
 
@@ -18,8 +19,16 @@ const createMarvinTask = async (task) => {
     }
 }
 
+const areTodayTasksOutdated = () => {
+    const now = new Date();
+    let timeDiff = now - todayRefreshedAt;
+    timeDiff /= 1000;
+
+    return Math.round(timeDiff) > process.env.PUSH_INTERVAL_SECONDS - 2;
+}
+
 const getTodayTasks = async () => {
-    if (todayTasks.length) {
+    if (todayTasks.length && !areTodayTasksOutdated()) {
         return todayTasks;
     }
 
@@ -28,6 +37,7 @@ const getTodayTasks = async () => {
 
         if (todayResponse.status === 200) {
             todayTasks = todayResponse.data;
+            todayRefreshedAt = new Date();
         }
 
         return todayTasks;
@@ -35,6 +45,8 @@ const getTodayTasks = async () => {
         console.log(err);
     }
 }
+
+
 
 const isValidCreatedTask = (createdTask) => {
     return createdTask && createdTask.status === 200;
