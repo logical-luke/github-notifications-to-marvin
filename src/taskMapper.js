@@ -37,7 +37,7 @@ const getRawTitle = (notification) => {
 }
 
 const getNote = (notification) => {
-    return `${notification.subject.url}`
+    return `${notification.subject.web_url}`
 }
 
 const mapNotificationOnTask = async (notification) => {

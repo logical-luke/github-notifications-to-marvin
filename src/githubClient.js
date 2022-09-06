@@ -13,6 +13,10 @@ const getNotifications = async () => {
                 notification.repository.full_name,
                 getPrIdFromUrl(notification.subject.url, notification.repository.url),
             );
+            notification.subject.web_url = await getWebUrl(
+                notification.repository.full_name,
+                getPrIdFromUrl(notification.subject.url, notification.repository.url),
+            );
             notifications.push(notification);
         }
     } catch (err) {
@@ -35,19 +39,29 @@ const markNotificationAsRead = async (id) => {
 }
 
 const isPrClosed = async (repo, id) => {
-    let merged = false;
+    return await getPr(repo, id).state === 'closed';
+}
+
+const getWebUrl = async (repo, id) => {
+    const pr = await getPr(repo, id);
+
+    return pr.html_url;
+}
+
+const getPr = async (repo, id) => {
+    let pr = {};
 
     try {
         const response = await client.pr(repo, parseInt(id)).infoAsync();
 
         if (response[0]) {
-            merged = response[0].state === 'closed';
+            pr = response[0];
         }
     } catch (err) {
         console.log(err);
     }
 
-    return merged;
+    return pr;
 }
 
 const getPrIdFromUrl = (url, repoUrl) => {
