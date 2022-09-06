@@ -13,6 +13,7 @@ const createMarvinTask = async (task) => {
             'title': task.title,
             'parentId': task.parentId,
             'timeEstimate': task.time,
+            'note': task.note,
         });
     } catch (err) {
         console.log(err);

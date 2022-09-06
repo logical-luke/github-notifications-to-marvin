@@ -29,11 +29,15 @@ const getCategoryId = (notification) => {
 }
 
 const getTitle = (notification) => {
-    return `+today @Review ${getActionVerb(notification)} "${notification.subject.title}" PR`;
+    return `+today @Review ${getRawTitle(notification)}`;
 }
 
 const getRawTitle = (notification) => {
     return `${getActionVerb(notification)} "${notification.subject.title}" PR`;
+}
+
+const getNote = (notification) => {
+    return `${notification.subject.url}`
 }
 
 const mapNotificationOnTask = async (notification) => {
@@ -42,6 +46,7 @@ const mapNotificationOnTask = async (notification) => {
         parentId: getCategoryId(notification),
         time: getTimeEstimate(notification),
         rawTitle: getRawTitle(notification),
+        note: getNote(notification),
     };
 }
 
