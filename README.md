@@ -1,6 +1,7 @@
 # GitHub Notifications to Amazing Marvin Tasks
 
 This repository contains a simple script that enables supporting daily routines.
+
 It automates fetching actions (here: GitHub notifications) to a single source of truth - Amazing Marvin.
 
 # Usage
